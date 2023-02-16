@@ -1,7 +1,8 @@
-﻿internal class CatalogOfPlanets
-{
+﻿delegate string? PlanetValidator(string planetName);
 
-    private int _errorCounter;
+internal class CatalogOfPlanets
+{
+    public int ErrorCounter;
     private readonly List<Planet> _planets = new();
     public CatalogOfPlanets()
     {
@@ -12,23 +13,25 @@
         _planets.Add(earth);
         _planets.Add(mars);
     }
-    public (int, int, string) GetPlanet(string name)
+    public (int, int, string?) GetPlanet(string name, PlanetValidator validator)
     {
-        _errorCounter++;
-        for (var i = 0; i < _planets.Count; i++)
+        var error = validator(name);
+        foreach (var planet in _planets)
         {
-            if (_planets[i].Name == name)
+            if (error != null)
             {
-                if (_errorCounter % 3 == 0)
+                return (0, 0, error);
+            }
+            else
+            {
+                if (planet.Name == name)
                 {
-                    return (_planets[i].IdFromSun, _planets[i].EquatorLength, "Вы спрашиваете слишком часто");
-                }
-                else
-                {
-                    return (_planets[i].IdFromSun, _planets[i].EquatorLength, "");
+                    {
+                        return (planet.IdFromSun, planet.EquatorLength, error);
+                    }
                 }
             }
         }
-        return (0, 0, "Не удалось найти планету");
+            return (0, 0, "Не удалось найти планету");
+        }
     }
-}

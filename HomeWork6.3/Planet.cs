@@ -3,7 +3,7 @@
     public string Name { get; private set; }
     public int IdFromSun { get; private set; }
     public int EquatorLength { get; private set; }
-    private Planet _prevPlanet;
+    private readonly Planet _prevPlanet;
 
     public Planet(string name, int idFromSun, int equatorLength, Planet planet)
     {
